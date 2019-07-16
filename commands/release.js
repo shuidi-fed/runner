@@ -1,73 +1,68 @@
-const chalk = require('chalk')
+'use strict'
+
 const shell = require('shelljs')
 const orderLib = require('../lib/order.js')
 const npmLib = require('../lib/npm.js')
 const ask = require('../lib/ask.js')
-const exec = shell.exec
+const getExistsOrders = (taskOrderList, scriptsOfPackage = {}) => taskOrderList.filter(order => scriptsOfPackage[order])
+const completeOrders = orders => [...orders.map(order => `yarn ${order}`), 'npm publish']
 const PWD = process.env.PWD
+const REQUIRED_ORDER_LIST = ['git', 'yarn']
+const DEFAULT_TASK_ORDER_LIST = ['lint', 'ut', 'build']
 
-function getContentOfPackage (packageJsonPath) {
-  console.log(chalk.cyan(`\nread the content of package.json, [package.json's path]：${packageJsonPath}\n`))
+async function getWorkSpace (currentPath) {
+  const name = 'WORK_SPACE'
+  const type = 'input'
+  const message = 'Please enter the project path you want to publish \n' +
+    '(The default is the current path: ' + currentPath + '):'
+  const { WORK_SPACE } = await ask([{ name, type, message }])
 
-  return require(packageJsonPath)
+  return WORK_SPACE
 }
 
-async function main (orderList = ['lint', 'ut', 'build']) {
-  orderLib.checkCommands(['git', 'yarn'])
+const execOrder = order => {
+  log.info(`[RUN COMMAND]: ${order}`)
 
-  let { WORK_SPACE } = await ask([
-    {
-      name: 'WORK_SPACE',
-      type: 'input',
-      message: `Please enter the project path you want to publish (default is the current path: ${PWD}): `
-    }
-  ])
+  const result = shell.exec(order)
+
+  if (!result.code) return
+
+  log.error(`[ERROR]：${result.stderr}`)
+
+  process.exit(result.code)
+}
+
+const execOrders = orders => orders.forEach(execOrder)
+
+async function main (taskOrderList = DEFAULT_TASK_ORDER_LIST) {
+  orderLib.checkCommands(REQUIRED_ORDER_LIST)
+
+  let WORK_SPACE = await getWorkSpace(PWD)
 
   if (!WORK_SPACE) WORK_SPACE = `${PWD}`
 
-  console.log(chalk.cyan(`\n[your project path]：${WORK_SPACE}\n`))
+  shell.exec(`cd ${WORK_SPACE}`)
 
-  exec(`cd ${WORK_SPACE}`)
-
-  const packageJsonContent = getContentOfPackage(`${WORK_SPACE}/package.json`)
-
+  const packageJsonContent = require(`${WORK_SPACE}/package.json`)
   const name = packageJsonContent.name
   const version = packageJsonContent.version
-  const scripts = packageJsonContent.scripts
-
-  console.log(chalk.cyan(`\n[project name]：${name}\n`))
-
-  let existsOrders = []
-
-  orderList.forEach(order => {
-    if (scripts[order]) existsOrders.push(order)
-  })
-
-  console.log(chalk.cyan(`begin:`))
-
-  console.log(chalk.cyan(`\n[The version to be released]：${version}\n`))
-
+  const existsOrders = getExistsOrders(taskOrderList, packageJsonContent.scripts)
   const latestVersion = await npmLib.getLastestVersionNumberByCurrentPackage(name)
+  const completedOrderList = completeOrders(existsOrders)
 
-  console.log(chalk.cyan(`\n[Remote repository current version]：${latestVersion}\n`))
+  log.info(`
+    [PROJECT PATH]：${WORK_SPACE}
+    [PROJECT NAME]：${name}
+    [THE VERSION TO BE RELEASED]：${version}
+    [REMOTE REPOSITORY CURRENT VERSION]：${latestVersion}
+    [COMPLETED ORDERS]: ${completedOrderList.join(' && ')}
+  `)
 
-  existsOrders = existsOrders.map(order => `yarn ${order}`)
-  existsOrders.push('npm publish')
-
-  existsOrders.forEach(order => {
-    console.log(chalk.cyan(`\n[Run command]: ${order}\n`))
-
-    const result = exec(order)
-
-    if (result.code) {
-      console.log(chalk.red(`[Error]：${result.stderr}`))
-      process.exit(result.code)
-    }
-  })
+  execOrders(completedOrderList)
 
   if (latestVersion > version) npmLib.setCurrentVersion(name, latestVersion)
 
-  console.log(chalk.cyan(`done.`))
+  log.info('Successfully Released!')
 }
 
 module.exports = main

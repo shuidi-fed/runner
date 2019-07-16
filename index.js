@@ -5,6 +5,11 @@ const figlet = require('figlet')
 const program = require('commander')
 const packageJson = require('./package.json')
 const release = require('./commands/release.js')
+const log = (str, color) => console.log(chalk[color](`\n${str}\n`))
+const logInfo = str => log(str, 'cyan')
+const logError = str => log(str, 'red')
+
+global.log = { info: logInfo, error: logError }
 
 function init () {
   console.log(chalk.green(figlet.textSync('Runner', {
@@ -19,15 +24,15 @@ program
   .usage('<command> [options]')
 
 program
-  .command('release [taskOrders]')
+  .command('release [taskOrderList]')
   .description(`
-    release npm project.
+    release npm project. (prerequisites: git, yarn)
     eg: run release lint,ut,build.
     the default task order list is: lint,ut,build.
   `)
-  .action(async (taskOrders = '') => {
+  .action(async (taskOrderList = '') => {
     init()
-    release(taskOrders ? taskOrders.split(',') : [])
+    release(taskOrderList ? taskOrderList.split(',') : undefined)
   })
 
 program.parse(process.argv)
