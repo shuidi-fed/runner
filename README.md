@@ -20,7 +20,8 @@ npm install -g sd-runner
 
 ```bash
 ➜  ~ run -h
-Usage: run <command> [options]
+
+Usage: index <command> [options]
 
 Options:
   -v, --version            output the version number
@@ -28,18 +29,32 @@ Options:
 
 Commands:
   release [taskOrderList]
-      release npm project. (prerequisites: git, yarn)
+      Release npm project. (prerequisites: git, yarn)
       eg: run release lint,ut,build.
       the default task order list is: lint,ut,build.
+
+  install <type>
+      Install the function for the project with the type parameter. (prerequisites: git, yarn)
+      eg: run install changelog.
+      The value range of the type parameter is: changelog.
 ```
 
-## Quick Start
+## quick start release package of NPM
 
 ```bash
 
 cd your_project_path
 
 run release
+```
+
+## quick start install changelog for your project
+
+```bash
+
+cd your_project_path
+
+run install changelog
 ```
 
 [MIT](LICENSE)
