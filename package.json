@@ -20,7 +20,7 @@
     "standard": "^13.0.2"
   },
   "standard": {
-    "globals": [ "log" ]
+    "globals": [ "log", "exec" ]
   },
   "husky": {
     "hooks": {
