@@ -1,3 +1,12 @@
+## [0.0.3](https://github.com/shuidi-fed/runner/compare/v0.0.2...v0.0.3) (2019-07-17)
+
+
+### Features
+
+* Support for creating mysql databases and data tables for the development environment via the ` ([28ddf7f](https://github.com/shuidi-fed/runner/commit/28ddf7f))
+
+
+
 ## [0.0.2](https://github.com/shuidi-fed/runner/compare/v0.0.1...v0.0.2) (2019-07-17)
 
 
