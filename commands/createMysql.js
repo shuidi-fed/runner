@@ -6,13 +6,12 @@ const fsLib = require('../lib/fs.js')
 const readdir = fsLib.readdir
 const readFile = fsLib.readFile
 
+const getDatabaseName = sql => sql.split(' ')[sql.split(' ').findIndex(item => item.toUpperCase() === 'DATABASE') + 1]
+
 async function createDB (createDatabaseSqlFilePath, execMysqlFunc) {
-  let createDatabaseSqlFileContent = await readFile(createDatabaseSqlFilePath)
-
-  createDatabaseSqlFileContent = createDatabaseSqlFileContent.toString()
-
-  const databaseName = /`(.*.)`/i.exec(createDatabaseSqlFileContent)[1]
-
+  const createDatabaseSqlFileContent = await readFile(createDatabaseSqlFilePath)
+  const createDatabaseSql = createDatabaseSqlFileContent.toString()
+  const databaseName = getDatabaseName(createDatabaseSql)
   const createDBResult = execMysqlFunc(createDatabaseSqlFilePath)
 
   if (createDBResult.code) {
