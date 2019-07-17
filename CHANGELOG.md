@@ -1,3 +1,12 @@
+## [0.0.2](https://github.com/shuidi-fed/runner/compare/v0.0.1...v0.0.2) (2019-07-17)
+
+
+### Features
+
+* Support for installing the change log function with the `install` subcommand ([eef1b58](https://github.com/shuidi-fed/runner/commit/eef1b58))
+
+
+
 ## 0.0.1 (2019-07-16)
 
 
