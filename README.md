@@ -39,7 +39,7 @@ Commands:
       The value range of the type parameter is: changelog.
 ```
 
-## quick start for release package of NPM
+## quick start release package of NPM
 
 ```bash
 
