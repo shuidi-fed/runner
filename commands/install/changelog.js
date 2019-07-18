@@ -16,9 +16,9 @@ async function main () {
 
   packageJsonContent.scripts.version = 'conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md'
 
-  exec(`echo '${JSON.stringify(packageJsonContent, null, 2)}' > ./package.json`)
-  exec('yarn add -D conventional-changelog-cli')
-  exec('commitizen init cz-conventional-changelog --yarn --dev --exact')
+  execSync(`echo '${JSON.stringify(packageJsonContent, null, 2)}' > ./package.json`)
+  execSync('yarn add -D conventional-changelog-cli')
+  execSync('commitizen init cz-conventional-changelog --yarn --dev --exact')
 
   log.info(`
     [PROJECT NAME]：${name} Successful installation!

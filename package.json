@@ -22,7 +22,9 @@
   "standard": {
     "globals": [
       "log",
-      "exec"
+      "exec",
+      "execSync",
+      "fixedCWDExecSync"
     ]
   },
   "husky": {
@@ -39,6 +41,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
+    "execa": "^2.0.3",
     "figlet": "^1.2.3",
     "inquirer": "^6.5.0",
     "shelljs": "^0.8.3"
