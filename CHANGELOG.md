@@ -1,3 +1,12 @@
+## [0.0.4](https://github.com/shuidi-fed/runner/compare/v0.0.3...v0.0.4) (2019-07-18)
+
+
+### Features
+
+* Use 'execa' instead of 'shelljs' ([4856a98](https://github.com/shuidi-fed/runner/commit/4856a98))
+
+
+
 ## [0.0.3](https://github.com/shuidi-fed/runner/compare/v0.0.2...v0.0.3) (2019-07-17)
 
 
