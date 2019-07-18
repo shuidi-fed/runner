@@ -11,7 +11,7 @@ const DEFAULT_TASK_ORDER_LIST = ['lint', 'ut', 'build']
 const execOrder = order => {
   log.info(`[RUN COMMAND]: ${order}`)
 
-  const result = exec(order)
+  const result = fixedCWDExecSync(order)
 
   if (!result.code) return
 
@@ -26,7 +26,6 @@ async function main (taskOrderList = DEFAULT_TASK_ORDER_LIST) {
   orderLib.checkCommands(REQUIRED_ORDER_LIST)
 
   const WORK_SPACE = await wsLib.getAndGotoWorkSpace()
-
   const packageJsonContent = require(`${WORK_SPACE}/package.json`)
   const name = packageJsonContent.name
   const version = packageJsonContent.version
