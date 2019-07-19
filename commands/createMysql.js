@@ -3,10 +3,23 @@
 const path = require('path')
 const wsLib = require('../lib/workspace.js')
 const fsLib = require('../lib/fs.js')
+
+const TEMPORARY_CREDENTIALS_FILE = '/tmp/mysql-credentials.cnf'
+
 const readdir = fsLib.readdir
 const readFile = fsLib.readFile
-
+const writeFile = fsLib.writeFile
 const getDatabaseName = sql => sql.split(' ')[sql.split(' ').findIndex(item => item.toUpperCase() === 'DATABASE') + 1]
+
+async function createTemporaryCredentialsFile (mysqlInfo) {
+  const content = `[client]\n` +
+    `host=${mysqlInfo.host}\n` +
+    `port=${mysqlInfo.port}\n` +
+    `user=${mysqlInfo.user}\n` +
+    `password=${mysqlInfo.password}`
+
+  return writeFile(TEMPORARY_CREDENTIALS_FILE, content)
+}
 
 async function createDB (createDatabaseSqlFilePath, execMysqlFunc) {
   const createDatabaseSqlFileContent = await readFile(createDatabaseSqlFilePath)
@@ -27,13 +40,14 @@ async function main (options) {
   const port = options.port
   const user = options.user
   const password = options.pwd
-  let database = options.database
-  let WORK_SPACE = await wsLib.getAndGotoWorkSpace()
-  const execMysqlFunc = filePath => exec(`mysql -h ${host} -P ${port} -u ${user} -p${password} < ${filePath}`, { silent: true })
-
-  WORK_SPACE += '/sql'
-
+  const WORK_SPACE = await wsLib.getAndGotoWorkSpace('/sql')
+  const execMysqlFunc = filePath => execSync(`mysql --defaults-extra-file=${TEMPORARY_CREDENTIALS_FILE} < ${filePath}`, { shell: true })
   const files = await readdir(path.resolve(WORK_SPACE))
+  const mysqlInfo = { host, port, user, password }
+
+  await createTemporaryCredentialsFile(mysqlInfo)
+
+  let database = options.database
 
   if (!database) {
     const createDatabaseSqlFilePath = files
