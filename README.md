@@ -59,10 +59,14 @@ run release
 
 ## quick start install changelog for your project
 
+>Note: `Changelog` requires you to install `commitizen` in advance, and it is recommended that you install this tool globally.
+
 ```bash
-
+# step1: install commitizen 
+yarn global add commitizen
+# step2: goto your project's root
 cd your_project_path
-
+# step3: install the changelog
 run install changelog
 ```
 

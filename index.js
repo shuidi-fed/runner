@@ -4,7 +4,6 @@ const chalk = require('chalk')
 const figlet = require('figlet')
 const program = require('commander')
 const packageJson = require('./package.json')
-const shelljs = require('shelljs')
 const shell = require('./lib/shell.js')
 const release = require('./commands/release.js')
 const install = require('./commands/install/index.js')
@@ -14,8 +13,6 @@ const logInfo = str => log(str, 'cyan')
 const logError = str => log(str, 'red')
 
 global.log = { info: logInfo, error: logError }
-// TODO: When solving the problem that execa creates a mysql database error, remove shelljs
-global.exec = shelljs.exec
 global.execSync = shell.execSync
 
 function init () {
