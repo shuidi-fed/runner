@@ -1,7 +1,11 @@
 'use strict'
 
 const changelogHandler = require('./changelog.js')
-const INSTALL_TYPE_LIST = { changelog: changelogHandler }
+const linterHandler = require('./linter.js')
+const INSTALL_TYPE_LIST = {
+  changelog: changelogHandler,
+  linter: linterHandler
+}
 
 const checkType = type => {
   if (!INSTALL_TYPE_LIST[type]) {

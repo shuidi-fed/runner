@@ -44,7 +44,7 @@ program
   .description(`
     Install the function for the project with the type parameter. (prerequisites: git, yarn)
     eg: run install changelog.
-    The value range of the type parameter is: changelog.
+    The value range of the type parameter is: changelog,linter.
   `)
   .action(async (type = '') => {
     init()
