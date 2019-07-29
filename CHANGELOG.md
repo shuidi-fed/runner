@@ -1,3 +1,12 @@
+## [0.0.6](https://github.com/shuidi-fed/runner/compare/v0.0.5...v0.0.6) (2019-07-29)
+
+
+### Features
+
+* **linter:** Implement the command to install linter for an existing project ([8e1331c](https://github.com/shuidi-fed/runner/commit/8e1331c))
+
+
+
 ## [0.0.5](https://github.com/shuidi-fed/runner/compare/v0.0.4...v0.0.5) (2019-07-19)
 
 

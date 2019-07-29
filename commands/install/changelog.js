@@ -1,5 +1,6 @@
 'use strict'
 
+const fs = require('../../lib/fs.js')
 const orderLib = require('../../lib/order.js')
 const wsLib = require('../../lib/workspace.js')
 
@@ -16,7 +17,10 @@ async function main () {
 
   packageJsonContent.scripts.version = 'conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md'
 
-  execSync(`echo '${JSON.stringify(packageJsonContent, null, 2)}' > ./package.json`)
+  const newPackageJsonContent = JSON.stringify(packageJsonContent, null, 2)
+
+  await fs.writeFile(`${WORK_SPACE}/package.json`, newPackageJsonContent)
+
   execSync('yarn add -D conventional-changelog-cli')
   execSync('commitizen init cz-conventional-changelog --yarn --dev --exact')
 
