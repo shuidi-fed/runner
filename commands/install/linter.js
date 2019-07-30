@@ -21,13 +21,11 @@ async function main () {
   if (!packageJsonContent.scripts) packageJsonContent.scripts = {}
 
   if (!allDependencies.includes(linterName)) {
-    fixedCWDExecSync(`yarn add -D ${linterName}`)
     if (!packageJsonContent.scripts.lint) packageJsonContent.scripts.lint = linterName
     if (!packageJsonContent[linterName]) packageJsonContent[linterName] = { globals: [] }
   }
 
   if (!allDependencies.includes(hookerName)) {
-    fixedCWDExecSync(`yarn add -D ${hookerName}`)
     if (!packageJsonContent[hookerName]) {
       packageJsonContent[hookerName] = {
         hooks: { 'pre-commit': 'yarn lint', 'pre-push': 'yarn lint' }
@@ -38,6 +36,9 @@ async function main () {
   const newPackageJsonContent = JSON.stringify(packageJsonContent, null, 2)
 
   await fs.writeFile(`${WORK_SPACE}/package.json`, newPackageJsonContent)
+
+  if (!allDependencies.includes(linterName)) fixedCWDExecSync(`yarn add -D ${linterName}`)
+  if (!allDependencies.includes(hookerName)) fixedCWDExecSync(`yarn add -D ${hookerName}`)
 
   log.info(`[PROJECT NAME]：${name} Successful installation!`)
 }
